@@ -9,6 +9,15 @@ interface Data {
   events: Event[];
 }
 
+interface StatusDatePair {
+  status: string;
+  date: string;
+}
+
+interface ServiceTypeDays {
+  [key: string]: (StatusDatePair | null)[];
+}
+
 export function parseData(data: Data) {
   const MAX_PERIOD = 90;
 
@@ -17,10 +26,10 @@ export function parseData(data: Data) {
     new Set(data.events.map((event) => event.serviceType))
   );
 
-  // Create an object to hold arrays of days for each serviceType, fixing the type error by explicitly defining the accumulator type
-  const serviceTypeDays: { [key: string]: (string | null)[] } =
+  // Create an object to hold arrays of days for each serviceType, now including both status and date
+  const serviceTypeDays: ServiceTypeDays =
     uniqueServiceTypes.reduce(
-      (acc: { [key: string]: (string | null)[] }, serviceType) => {
+      (acc: ServiceTypeDays, serviceType) => {
         acc[serviceType] = Array(MAX_PERIOD).fill(null); // Initialize days with null
         return acc;
       },
@@ -34,7 +43,7 @@ export function parseData(data: Data) {
       new Date(b.statusChangeDateTime).getTime()
   );
 
-  // Iterate over all events, fixing the type error by ensuring we are performing arithmetic operations on numbers
+  // Iterate over all events, now storing both status and date
   sortedEvents.forEach((event) => {
     const serviceTypeArray = serviceTypeDays[event.serviceType];
     const eventDate = new Date(event.statusChangeDateTime).getTime();
@@ -42,31 +51,29 @@ export function parseData(data: Data) {
     const diffTime = Math.abs(today - eventDate);
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-    console.log(
-      `Event Date: ${event.statusChangeDateTime}, Today: ${new Date().toISOString()}, DiffDays: ${diffDays}`
-    );
+    for (let i = 0; i < MAX_PERIOD; i++) {
+      const date = new Date(today - (MAX_PERIOD - i - 1) * (1000 * 60 * 60 * 24));
+      const formattedDate = date.toISOString().split('T')[0]; // Format date as YYYY-MM-DD
 
-    // When event is found, add days to array with days with status (defined by newStatus)
-    if (diffDays <= MAX_PERIOD) {
-      const startIndex = MAX_PERIOD - diffDays;
-      console.log(
-        `Filling from index ${startIndex} for serviceType ${event.serviceType} with status ${event.newStatus}`
-      );
-      for (let i = startIndex; i < MAX_PERIOD; i++) {
-        serviceTypeArray[i] = event.newStatus;
-        console.log(
-          `Updating index ${i} for serviceType ${event.serviceType} with status ${event.newStatus}`
-        );
+      if (i === MAX_PERIOD - diffDays) {
+        serviceTypeArray[i] = { status: event.newStatus, date: formattedDate }; // Use the event's date for the first occurrence
+      }
+      if (i > MAX_PERIOD - diffDays) {
+        serviceTypeArray[i] = serviceTypeArray[i] || { status: event.newStatus, date: formattedDate };
       }
     }
   });
 
   console.log(serviceTypeDays);
 
-  // When all dates filled for each serviceType, stop iterating
-  // The serviceTypeDays object now contains arrays of days with statuses for each serviceType
+  // The serviceTypeDays object now contains arrays of days with statuses and dates for each serviceType
   return serviceTypeDays;
 }
 ---
 
-<!-- This component does not render anything by itself -->
+  // When all dates filled for each serviceType, stop iterating
+  // The serviceTypeDays object now contains arrays of days with statuses and dates for each serviceType
+  return serviceTypeDays;
+}
+---
+
