@@ -2,6 +2,10 @@
 import Layout from "../layouts/Layout.astro";
 import data from "../data/data.json";
 import BarLine from "../components/BarLine.astro";
+import { parseData } from "../components/DataParser.astro";
+
+const parsedData = parseData(data);
+
 ---
 
 <Layout title="Portugal Status Page">
