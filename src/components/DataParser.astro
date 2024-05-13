@@ -27,14 +27,13 @@ export function parseData(data: Data) {
   );
 
   // Create an object to hold arrays of days for each serviceType, now including both status and date
-  const serviceTypeDays: ServiceTypeDays =
-    uniqueServiceTypes.reduce(
-      (acc: ServiceTypeDays, serviceType) => {
-        acc[serviceType] = Array(MAX_PERIOD).fill(null); // Initialize days with null
-        return acc;
-      },
-      {}
-    );
+  const serviceTypeDays: ServiceTypeDays = uniqueServiceTypes.reduce(
+    (acc: ServiceTypeDays, serviceType) => {
+      acc[serviceType] = Array(MAX_PERIOD).fill(null); // Initialize days with null
+      return acc;
+    },
+    {}
+  );
 
   // Sort all events by date
   const sortedEvents = data.events.sort(
@@ -43,23 +42,31 @@ export function parseData(data: Data) {
       new Date(b.statusChangeDateTime).getTime()
   );
 
+  // Initialize a map to keep track of the latest status for each serviceType
+  const latestStatusMap: { [key: string]: string } = {};
+
   // Iterate over all events, now storing both status and date
   sortedEvents.forEach((event) => {
     const serviceTypeArray = serviceTypeDays[event.serviceType];
+    latestStatusMap[event.serviceType] = event.newStatus; // Update the latest status for the serviceType
     const eventDate = new Date(event.statusChangeDateTime).getTime();
     const today = new Date().getTime();
     const diffTime = Math.abs(today - eventDate);
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
     for (let i = 0; i < MAX_PERIOD; i++) {
-      const date = new Date(today - (MAX_PERIOD - i - 1) * (1000 * 60 * 60 * 24));
-      const formattedDate = date.toISOString().split('T')[0]; // Format date as YYYY-MM-DD
+      const date = new Date(
+        today - (MAX_PERIOD - i - 1) * (1000 * 60 * 60 * 24)
+      );
+      const formattedDate = date.toISOString().split("T")[0]; // Format date as YYYY-MM-DD
 
-      if (i === MAX_PERIOD - diffDays) {
-        serviceTypeArray[i] = { status: event.newStatus, date: formattedDate }; // Use the event's date for the first occurrence
-      }
-      if (i > MAX_PERIOD - diffDays) {
-        serviceTypeArray[i] = serviceTypeArray[i] || { status: event.newStatus, date: formattedDate };
+      // Check if the current index corresponds to a date before the event date
+      if (i < MAX_PERIOD - diffDays) {
+        // If before the event date, ensure the status is null or the previous status
+        serviceTypeArray[i] = serviceTypeArray[i] || null;
+      } else {
+        // From the event date onwards, update the status
+        serviceTypeArray[i] = { status: latestStatusMap[event.serviceType], date: formattedDate };
       }
     }
   });
@@ -70,10 +77,3 @@ export function parseData(data: Data) {
   return serviceTypeDays;
 }
 ---
-
-  // When all dates filled for each serviceType, stop iterating
-  // The serviceTypeDays object now contains arrays of days with statuses and dates for each serviceType
-  return serviceTypeDays;
-}
----
-
