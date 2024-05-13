@@ -1,14 +1,14 @@
 {
   "events": [
     {
-      "serviceType": "Immigration / Family reunion",
+      "serviceType": "Immigration / Family reunion 98.1",
       "statusChangeDateTime": "2024-02-05T14:30:00Z",
-      "newStatus": "operational"
+      "newStatus": "failing"
     },
     {
-      "serviceType": "Immigration / Family reunion",
-      "statusChangeDateTime": "2024-04-06T08:15:00Z",
-      "newStatus": "failing"
+      "serviceType": "Immigration / Family reunion 98.1",
+      "statusChangeDateTime": "2024-04-30T19:15:00Z",
+      "newStatus": "operational"
     },
     {
       "serviceType": "Immigration / Residency renewal",
