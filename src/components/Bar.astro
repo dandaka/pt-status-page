@@ -1,0 +1,31 @@
+---
+const { status, date } = Astro.props;
+
+let color = undefined;
+
+switch (status) {
+  case "degraded":
+    color = "bg-degraded";
+    break;
+  case "failing":
+    color = "bg-failing";
+    break;
+  case "operational":
+    color = "bg-operational";
+    break;
+}
+---
+
+<div class={`w-[6px] h-10 ${color} rounded`}></div>
+
+<style is:global>
+  .bg-failing {
+    background-color: rgba(255, 0, 0, 0.7);
+  }
+  .bg-degraded {
+    background-color: rgba(255, 221, 0, 0.7);
+  }
+  .bg-operational {
+    background-color: #22c55ee6;
+  }
+</style>

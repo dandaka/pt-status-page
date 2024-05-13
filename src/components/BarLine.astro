@@ -1,0 +1,20 @@
+---
+import Bar from "../components/Bar.astro";
+const { name, barData } = Astro.props;
+---
+
+<div class="pb-8">
+  <div class="pb-2 flex justify-between">
+    <div><h3>{name}</h3></div><div><p>Operational</p></div>
+  </div>
+  <div class="flex flex-row-reverse space-x-0.5 space-x-reverse">
+    {
+      Array.from({ length: 90 }).map((_, index) => (
+        <Bar
+          status={Math.random() < 0.5 ? "failing" : "operational"}
+          key={index}
+        />
+      ))
+    }
+  </div>
+</div>
