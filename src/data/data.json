@@ -3,7 +3,7 @@
     {
       "serviceType": "Immigration / Family reunion",
       "statusChangeDateTime": "2024-02-05T14:30:00Z",
-      "newStatus": "degraded"
+      "newStatus": "operational"
     },
     {
       "serviceType": "Immigration / Family reunion",
@@ -12,13 +12,13 @@
     },
     {
       "serviceType": "Immigration / Residency renewal",
-      "statusChangeDateTime": "2024-04-07T09:00:00Z",
+      "statusChangeDateTime": "2024-02-07T09:00:00Z",
       "newStatus": "failing"
     },
     {
-      "serviceType": "Public Transportation / Metro",
-      "statusChangeDateTime": "2024-04-08T10:00:00Z",
-      "newStatus": "operational"
+      "serviceType": "Immigration / Residency 90.2",
+      "statusChangeDateTime": "2024-02-07T09:00:00Z",
+      "newStatus": "failing"
     }
   ]
 }

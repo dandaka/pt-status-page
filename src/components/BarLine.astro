@@ -1,18 +1,23 @@
 ---
 import Bar from "../components/Bar.astro";
-const { name, barData } = Astro.props;
+import type { StatusDatePair } from "../components/DataParser.astro";
+const { name, timeSeries } = Astro.props;
+
 ---
 
 <div class="pb-8">
   <div class="pb-2 flex justify-between">
-    <div><h3>{name}</h3></div><div><p>Operational</p></div>
+    <div><h3>{name}</h3></div><div>
+      <p>{timeSeries[timeSeries.length - 1]?.status || "Unknown"}</p>
+    </div>
   </div>
   <div class="flex flex-row-reverse space-x-0.5 space-x-reverse">
     {
-      Array.from({ length: 90 }).map((_, index) => (
+      timeSeries.reverse().map((day: StatusDatePair | null, index: number) => (
         <Bar
-          status={Math.random() < 0.5 ? "failing" : "operational"}
+          status={day ? day.status : "unknown"}
           key={index}
+          date={day ? day.date : undefined}
         />
       ))
     }

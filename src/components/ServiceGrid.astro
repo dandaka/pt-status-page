@@ -1,0 +1,12 @@
+---
+import BarLine from "../components/BarLine.astro";
+import { parseData } from "../components/DataParser.astro";
+import data from "../data/data.json";
+const { serviceTypeDays, uniqueServiceTypes } = parseData(data);
+---
+
+{
+  uniqueServiceTypes.map((serviceType) => (
+    <BarLine name={serviceType} timeSeries={serviceTypeDays[serviceType]} />
+  ))
+}

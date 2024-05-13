@@ -9,7 +9,7 @@ interface Data {
   events: Event[];
 }
 
-interface StatusDatePair {
+export interface StatusDatePair {
   status: string;
   date: string;
 }
@@ -74,6 +74,6 @@ export function parseData(data: Data) {
   console.log(serviceTypeDays);
 
   // The serviceTypeDays object now contains arrays of days with statuses and dates for each serviceType
-  return serviceTypeDays;
+  return {serviceTypeDays, uniqueServiceTypes};
 }
 ---

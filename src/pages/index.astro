@@ -1,11 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import data from "../data/data.json";
-import BarLine from "../components/BarLine.astro";
-import { parseData } from "../components/DataParser.astro";
-
-const parsedData = parseData(data);
-
+import ServiceGrid from "../components/ServiceGrid.astro";
 ---
 
 <Layout title="Portugal Status Page">
@@ -17,9 +12,7 @@ const parsedData = parseData(data);
           <p>An open source status page of public services</p>
         </div>
         <div class="flex flex-col pt-8">
-          <BarLine name="Immigration / Reunion" />
-          <BarLine name="Immigration / Residency initial 90.2" />
-          <BarLine name="Immigration / Residency reissue" />
+          <ServiceGrid />
         </div>
         <div>
           <p>
